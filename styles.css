@@ -22,6 +22,13 @@ html, body {
     overflow: hidden;
     background: url('assets/siteback.jpg') center center no-repeat;
     background-size: cover;
+    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none;     /* Hide scrollbar for Firefox */
+}
+
+html::-webkit-scrollbar, 
+body::-webkit-scrollbar {
+    display: none;
 }
 
 body {
@@ -44,6 +51,20 @@ body {
     align-items: flex-start;
     justify-content: flex-start;
     height: 100vh;
+    overflow-y: auto;
+    -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
+    scrollbar-width: none;     /* Hide scrollbar for Firefox */
+}
+
+.container::-webkit-scrollbar {
+    display: none;
+}
+
+/* Remove all previous scrollbar styling */
+.container::-webkit-scrollbar-track,
+.container::-webkit-scrollbar-thumb,
+.container::-webkit-scrollbar-thumb:hover {
+    display: none;
 }
 
 header {
