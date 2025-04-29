@@ -10,6 +10,14 @@
     <link href="https://fonts.googleapis.com/css2?family=Baloo+2:wght@700&display=swap" rel="stylesheet">
 </head>
 <body>
+    <div class="top-right-icons">
+        <a href="https://discord.gg/G7jBjD33QW" target="_blank" class="icon-link" title="Join us on Discord">
+            <i class="fab fa-discord"></i>
+        </a>
+        <a href="https://x.com/PNLCARDSOL" target="_blank" class="icon-link" title="Follow us on X">
+            <i class="fab fa-twitter"></i>
+        </a>
+    </div>
     <div class="container">
         <header>
             <h1>A degen deserves a personalised Pnl card.</h1>
@@ -24,15 +32,32 @@
                         <input type="text" id="name" placeholder="Enter your name">
                     </div>
                     
-                    <div class="form-group">
-                        <label for="type">Select Your Title</label>
+                    <div class="form-group" id="title-group" style="position: relative; width: max-content;">
                         <select id="type">
                             <option value="11000x-degen-king">11000x Degen King</option>
                             <option value="1000x-chad">1000x Chad</option>
                             <option value="god-candle-finder">God Candle Finder</option>
                             <option value="kol-killer">KOL Killer</option>
+                            <option value="custom">Custom Title</option>
                         </select>
+                        <button id="editCustomTitle" class="edit-btn" style="display: none;" title="Edit Custom Title">
+                            <i class="fas fa-edit"></i>
+                        </button>
                     </div>
+
+                    <!-- Custom Title Popup -->
+                    <div id="customTitlePopup" class="popup-modal" style="display: none;">
+                        <div class="popup-content">
+                            <h3>Enter Your Custom Title</h3>
+                            <input type="text" id="customTitleInput" placeholder="Type your custom title here" maxlength="20">
+                            <div class="popup-buttons">
+                                <button id="saveCustomTitle" class="action-btn">Save</button>
+                                <button id="cancelCustomTitle" class="action-btn cancel-btn">Cancel</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
 
                     <div class="form-group">
                         <label>Select Character</label>
@@ -105,7 +130,12 @@
                                     <div class="certified-text">CERTIFIED</div>
                                     <div class="holder-info">
                                         <div class="holder-name">Enter your name</div>
-                                        <div class="holder-type">11000X Degen King</div>
+                                        <div class="holder-type-container">
+                                            <div class="holder-type">11000X Degen King</div>
+                                            <button id="editCustomTitle" class="edit-btn" style="display: none;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="social-info">
