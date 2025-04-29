@@ -9,6 +9,15 @@ document.addEventListener('DOMContentLoaded', () => {
     const characterOptions = document.querySelectorAll('.character-option');
     const previewCard = document.getElementById('preview-card');
     const notificationContainer = document.getElementById('notification-container');
+    const typeSelect = document.getElementById('type');
+    const customTitlePopup = document.getElementById('customTitlePopup');
+    const customTitleInput = document.getElementById('customTitleInput');
+    const saveCustomTitleBtn = document.getElementById('saveCustomTitle');
+    const cancelCustomTitleBtn = document.getElementById('cancelCustomTitle');
+    const editCustomTitleBtn = document.getElementById('editCustomTitle');
+    const holderType = document.querySelector('.holder-type');
+
+    let lastCustomTitle = '';
 
     // Function to show notifications
     function showNotification(message, type = 'error') {
@@ -65,7 +74,12 @@ document.addEventListener('DOMContentLoaded', () => {
 
         // Update the card content
         document.querySelector('.holder-name').textContent = name || 'NAME';
-        document.querySelector('.holder-type').textContent = type.replace(/-/g, ' ').toUpperCase();
+        if (type !== 'custom') {
+            document.querySelector('.holder-type').textContent = type.replace(/-/g, ' ').toUpperCase();
+            editCustomTitleBtn.style.display = 'none';
+        } else if (lastCustomTitle) {
+            document.querySelector('.holder-type').textContent = lastCustomTitle.toUpperCase();
+        }
     }
 
     // Add input event listeners for live updates
@@ -481,6 +495,59 @@ document.addEventListener('DOMContentLoaded', () => {
             window.location.href = 'https://example.com'; // Replace with your redirect URL
         });
     }
+
+    // Handle custom title option
+    typeSelect.addEventListener('change', function() {
+        if (this.value === 'custom') {
+            editCustomTitleBtn.style.display = 'inline-flex';
+            // Optionally, open the popup if no custom title is set yet
+            if (!lastCustomTitle) {
+                customTitlePopup.style.display = 'flex';
+                customTitleInput.value = '';
+                customTitleInput.focus();
+            }
+        } else {
+            editCustomTitleBtn.style.display = 'none';
+            updateCard();
+        }
+    });
+
+    editCustomTitleBtn.addEventListener('click', function(e) {
+        e.preventDefault();
+        customTitlePopup.style.display = 'flex';
+        customTitleInput.value = holderType.textContent.trim();
+        customTitleInput.focus();
+    });
+
+    saveCustomTitleBtn.addEventListener('click', function() {
+        const customTitle = customTitleInput.value.trim();
+        if (customTitle) {
+            holderType.textContent = customTitle.toUpperCase();
+            lastCustomTitle = customTitle;
+            customTitlePopup.style.display = 'none';
+            customTitleInput.value = '';
+        }
+    });
+
+    cancelCustomTitleBtn.addEventListener('click', function() {
+        customTitlePopup.style.display = 'none';
+        customTitleInput.value = '';
+        typeSelect.value = '11000x-degen-king';
+        editCustomTitleBtn.style.display = 'none';
+        lastCustomTitle = '';
+        updateCard();
+    });
+
+    customTitlePopup.addEventListener('click', function(e) {
+        if (e.target === customTitlePopup) {
+            customTitlePopup.style.display = 'none';
+            customTitleInput.value = '';
+            typeSelect.value = '11000x-degen-king';
+            editCustomTitleBtn.style.display = 'none';
+            lastCustomTitle = '';
+            updateCard();
+        }
+    });
 
     // Initial update
     updateCard();
