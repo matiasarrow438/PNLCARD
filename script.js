@@ -459,7 +459,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Handle share button
     if (previewShareBtn) {
         previewShareBtn.addEventListener('click', () => {
-            const shareUrl = "https://x.com/intent/post?text=I%E2%80%99m%20certified%20degen%20with%20my%20PNL%20card%2C%20are%20you%3F%20%0A%24PNL%20%23millycoded%0AMake%20yours%20here%3A%20website%20addy";
+            const shareUrl = "https://x.com/intent/post?text=I%E2%80%99m%20certified%20degen%20with%20my%20PNL%20card%2C%20are%20you%3F%0A%24PNL%20%23millycoded%0AMake%20yours%20here%3A%20pnlcardsol.org";
             window.open(shareUrl, '_blank');
         });
     }
