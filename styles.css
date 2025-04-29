@@ -448,32 +448,162 @@ footer {
 @media (max-width: 768px) {
     .container {
         padding: 0.5rem;
+        width: 95vw;
     }
 
     header {
-        margin-bottom: 1rem;
+        margin-bottom: 2vh;
+        width: 100%;
+    }
+
+    h1 {
+        font-size: clamp(1.2rem, 5vw, 1.8rem);
+        text-align: center;
+        margin-bottom: 0.5rem;
+    }
+
+    .subtitle {
+        font-size: clamp(0.8rem, 3vw, 0.9rem);
+        text-align: center;
     }
 
     .form-section {
         grid-template-columns: 1fr;
-        gap: 2rem;
+        gap: 1rem;
+        margin-top: -2vh;
+        display: flex;
+        flex-direction: column;
+        width: 100%;
     }
 
-    .form-section::after {
-        display: none;
+    .license-form {
+        order: 1;
+        width: 100%;
+        padding: 0.8rem;
+        gap: 0.8rem;
+    }
+
+    .form-group {
+        margin-bottom: 0.5rem;
+    }
+
+    label {
+        font-size: clamp(0.8rem, 3vw, 0.9rem);
+        margin-bottom: 0.3rem;
+    }
+
+    input, select {
+        padding: 0.5rem;
+        font-size: clamp(0.9rem, 3.5vw, 1rem);
     }
 
     .preview-section {
-        min-height: 400px;
+        order: 2;
+        min-height: auto;
+        margin-top: 1rem;
+        width: 100%;
     }
-    
-    .preview-container {
-        padding: 1rem;
+
+    .preview-card {
+        width: 95vw;
+        max-width: 95vw;
+        height: auto;
+        aspect-ratio: 4/3;
+        margin: 0 auto;
     }
 
     .character-options,
     .background-options {
         grid-template-columns: repeat(3, 1fr);
+        gap: 0.4rem;
+    }
+
+    .action-buttons {
+        flex-direction: column;
+        gap: 0.5rem;
+        width: 100%;
+        margin-top: 0.8rem;
+        padding: 0 0.5rem;
+    }
+
+    .action-btn {
+        width: 100%;
+        padding: 0.6rem;
+        font-size: clamp(0.9rem, 3.5vw, 1rem);
+    }
+
+    .holder-name {
+        font-size: clamp(1.5rem, 6vw, 2rem);
+    }
+
+    .holder-type {
+        font-size: clamp(1.2rem, 5vw, 1.5rem);
+    }
+
+    .certified-text {
+        font-size: clamp(1.3rem, 5vw, 1.8rem);
+    }
+
+    .social-info {
+        font-size: clamp(0.8rem, 3vw, 0.9rem);
+        bottom: 0.8rem;
+        left: 0.8rem;
+    }
+
+    .character-image-container {
+        width: min(150px, 30vw);
+        height: min(150px, 30vw);
+    }
+
+    .character-image-container img {
+        max-width: 100%;
+        max-height: 100%;
+    }
+}
+
+@media (max-width: 480px) {
+    .container {
+        padding: 0.3rem;
+        width: 98vw;
+    }
+
+    .form-section {
+        margin-top: -1vh;
+    }
+
+    .character-options,
+    .background-options {
+        grid-template-columns: repeat(2, 1fr);
+        gap: 0.3rem;
+    }
+
+    .preview-card {
+        width: 98vw;
+        max-width: 98vw;
+        aspect-ratio: 3/4;
+        border-width: 2px;
+    }
+
+    .bubble-title {
+        font-size: clamp(1.2rem, 5vw, 1.5rem);
+    }
+
+    .certified-text {
+        font-size: clamp(1.1rem, 4.5vw, 1.5rem);
+        top: 1.5rem;
+        left: 1rem;
+    }
+
+    .ca-text {
+        font-size: clamp(0.7rem, 2.5vw, 0.9rem);
+        top: 3.5rem;
+        left: 1rem;
+    }
+
+    .image-upload-container {
+        height: 80px;
+        min-height: 0;
+        max-height: 100px;
     }
 }
 
