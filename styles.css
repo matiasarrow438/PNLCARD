@@ -24,6 +24,7 @@ html, body {
     background-size: cover;
     -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
     scrollbar-width: none;     /* Hide scrollbar for Firefox */
+    overflow-x: hidden;
 }
 
 html::-webkit-scrollbar, 
@@ -52,6 +53,7 @@ body {
     justify-content: flex-start;
     height: 100vh;
     overflow-y: auto;
+    overflow-x: hidden;
     -ms-overflow-style: none;  /* Hide scrollbar for IE and Edge */
     scrollbar-width: none;     /* Hide scrollbar for Firefox */
 }
