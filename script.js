@@ -176,6 +176,9 @@ document.addEventListener('DOMContentLoaded', () => {
             showNotification('Generating your card...', 'warning');
             downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
 
+            // Check if user is on mobile
+            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
+
             // Get the selected background image
             const selectedBg = document.querySelector('.background-option.selected img');
             if (!selectedBg) {
@@ -186,8 +189,8 @@ document.addEventListener('DOMContentLoaded', () => {
             // Create a canvas with exact dimensions
             const canvas = document.createElement('canvas');
             const ctx = canvas.getContext('2d');
-            canvas.width = 800;  // Exact width
-            canvas.height = 600; // Exact height
+            canvas.width = 800;
+            canvas.height = 600;
 
             // Function to draw rounded rectangle
             function roundedRect(x, y, width, height, radius) {
@@ -352,23 +355,87 @@ document.addEventListener('DOMContentLoaded', () => {
                     ctx.fillText('X: @pnlcardsol', 50, canvas.height - 80);
                     ctx.fillText('CA: Coming Soon', 50, canvas.height - 50);
 
-                    // Download the image
-                    const downloadTimestamp = new Date().toISOString().replace(/[:.]/g, '-');
-                    const link = document.createElement('a');
-                    link.download = `pnl-card-${downloadTimestamp}.png`;
-                    canvas.toBlob((blob) => {
-                        const url = URL.createObjectURL(blob);
-                        link.href = url;
-                        link.click();
-                        URL.revokeObjectURL(url);
-                        // Reset button and show success
-                        downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
-                        showNotification('Card downloaded successfully!', 'success');
-                        // Open X profile in a new tab after a short delay
-                        setTimeout(() => {
-                            window.open('https://x.com/PNLCARDSOL', '_blank');
-                        }, 500);
-                    }, 'image/png');
+                    // Handle download differently for mobile vs desktop
+                    if (isMobile) {
+                        canvas.toBlob((blob) => {
+                            try {
+                                // Create a temporary link for downloading
+                                const url = URL.createObjectURL(blob);
+                                
+                                // For iOS devices
+                                if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
+                                    // Create temporary link
+                                    const link = document.createElement('a');
+                                    link.href = url;
+                                    link.download = `pnl-card-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
+                                    link.style.display = 'none';
+                                    document.body.appendChild(link);
+                                    link.click();
+                                    document.body.removeChild(link);
+                                    URL.revokeObjectURL(url);
+                                } 
+                                // For Android devices
+                                else {
+                                    // Use the Web Share API if available
+                                    if (navigator.share) {
+                                        const file = new File([blob], 'pnl-card.png', { type: 'image/png' });
+                                        navigator.share({
+                                            files: [file],
+                                            title: 'PNL Card',
+                                            text: 'Check out my PNL Card!'
+                                        }).then(() => {
+                                            showNotification('Card saved successfully!', 'success');
+                                        }).catch(error => {
+                                            console.error('Error sharing:', error);
+                                            // Fallback to direct download if sharing fails
+                                            const link = document.createElement('a');
+                                            link.href = url;
+                                            link.download = `pnl-card-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
+                                            link.click();
+                                            URL.revokeObjectURL(url);
+                                        });
+                                    } else {
+                                        // Fallback for older Android devices
+                                        const link = document.createElement('a');
+                                        link.href = url;
+                                        link.download = `pnl-card-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
+                                        link.click();
+                                        URL.revokeObjectURL(url);
+                                    }
+                                }
+                                
+                                // Reset button and show success
+                                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
+                                showNotification('Card saved to your photos!', 'success');
+                                
+                                // Open X profile in a new tab after a short delay
+                                setTimeout(() => {
+                                    window.open('https://x.com/PNLCARDSOL', '_blank');
+                                }, 500);
+                            } catch (error) {
+                                console.error('Error saving image:', error);
+                                showNotification('Error saving image. Please try again.');
+                                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
+                            }
+                        }, 'image/png');
+                    } else {
+                        // Desktop download logic
+                        canvas.toBlob((blob) => {
+                            const url = URL.createObjectURL(blob);
+                            const link = document.createElement('a');
+                            link.download = `pnl-card-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
+                            link.href = url;
+                            link.click();
+                            URL.revokeObjectURL(url);
+                            // Reset button and show success
+                            downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
+                            showNotification('Card downloaded successfully!', 'success');
+                            // Open X profile in a new tab after a short delay
+                            setTimeout(() => {
+                                window.open('https://x.com/PNLCARDSOL', '_blank');
+                            }, 500);
+                        }, 'image/png');
+                    }
 
                 } catch (error) {
                     console.error('Error generating card:', error);
