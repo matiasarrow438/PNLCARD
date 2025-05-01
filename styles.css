@@ -328,9 +328,10 @@ button:hover {
 }
 
 .certified-text {
+    font-family: 'Racing Sans One', cursive;
     color: #ff3b3b !important;
     font-size: 2.2rem;
-    font-weight: 900;
+    font-weight: 400;
     position: absolute;
     top: 3.5rem;
     left: 2rem;
@@ -343,6 +344,27 @@ button:hover {
     -ms-user-select: text;
     pointer-events: auto;
     mix-blend-mode: normal;
+    /* Stamp effect */
+    padding: 0.5rem 1.5rem;
+    border: 3px solid #ff3b3b;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 0 0 4px rgba(255, 59, 59, 0.1),
+        0 0 0 8px rgba(255, 59, 59, 0.05),
+        0 0 20px rgba(255, 59, 59, 0.2);
+    text-shadow: 
+        2px 2px 0 rgba(0, 0, 0, 0.2),
+        -1px -1px 0 rgba(0, 0, 0, 0.2),
+        1px -1px 0 rgba(0, 0, 0, 0.2),
+        -1px 1px 0 rgba(0, 0, 0, 0.2);
+    /* Distressed effect */
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%),
+        repeating-linear-gradient(45deg, rgba(255, 59, 59, 0.1) 0px, rgba(255, 59, 59, 0.1) 1px, transparent 1px, transparent 2px);
+    /* Ensure consistent rendering */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
 }
 
 .ca-text {
@@ -1282,6 +1304,27 @@ body, .container, label, input, select, .subtitle, .form-group, .license-form, .
     -ms-user-select: text;
     pointer-events: auto;
     mix-blend-mode: normal;
+    /* Stamp effect */
+    padding: 0.5rem 1.5rem;
+    border: 3px solid #ff3b3b;
+    border-radius: 50%;
+    background: rgba(255, 255, 255, 0.1);
+    box-shadow: 
+        0 0 0 4px rgba(255, 59, 59, 0.1),
+        0 0 0 8px rgba(255, 59, 59, 0.05),
+        0 0 20px rgba(255, 59, 59, 0.2);
+    text-shadow: 
+        2px 2px 0 rgba(0, 0, 0, 0.2),
+        -1px -1px 0 rgba(0, 0, 0, 0.2),
+        1px -1px 0 rgba(0, 0, 0, 0.2),
+        -1px 1px 0 rgba(0, 0, 0, 0.2);
+    /* Distressed effect */
+    background-image: 
+        radial-gradient(circle at 50% 50%, rgba(255, 255, 255, 0.1) 0%, rgba(255, 255, 255, 0) 50%),
+        repeating-linear-gradient(45deg, rgba(255, 59, 59, 0.1) 0px, rgba(255, 59, 59, 0.1) 1px, transparent 1px, transparent 2px);
+    /* Ensure consistent rendering */
+    -webkit-print-color-adjust: exact;
+    print-color-adjust: exact;
 }
 
 .social-info {
