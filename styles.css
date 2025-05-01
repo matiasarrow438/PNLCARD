@@ -925,7 +925,7 @@ footer {
 }
 
 .bubble-title {
-    font-family: 'Baloo 2', cursive, sans-serif;
+    font-family: 'Racing Sans One', cursive;
     font-size: 3.2rem;
     color: #4ade80;
     letter-spacing: 0.04em;
@@ -938,7 +938,7 @@ footer {
     padding-top: 1.5rem;
     padding-bottom: 0.5rem;
     text-align: right;
-    font-weight: 800;
+    font-weight: 400;
     transform: rotate(-1deg);
     transition: all 0.3s ease;
 }
@@ -1234,4 +1234,67 @@ body, .container, label, input, select, .subtitle, .form-group, .license-form, .
     .icon-link {
         font-size: 1.5rem;
     }
+}
+
+.holder-name {
+    font-family: 'Racing Sans One', cursive;
+    font-size: 3.5rem;
+    color: white;
+    font-weight: 400;
+    margin-bottom: 1.5rem;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+}
+
+.holder-type {
+    font-family: 'Racing Sans One', cursive;
+    font-size: 2.2rem;
+    color: #4ade80 !important;
+    font-weight: 400;
+    padding: 0;
+    background: none;
+    display: inline-block;
+    border-radius: 0;
+    text-shadow: 
+        0 2px 8px rgba(74, 222, 128, 0.4),
+        2px 2px 4px rgba(22, 163, 74, 0.6),
+        -2px 2px 4px rgba(22, 163, 74, 0.6),
+        0px 4px 16px rgba(22, 163, 74, 0.4);
+    letter-spacing: 0.03em;
+    margin-top: 0.5rem;
+    transform: rotate(-1deg);
+    transition: all 0.3s ease;
+}
+
+.certified-text {
+    font-family: 'Racing Sans One', cursive;
+    color: #ff3b3b !important;
+    font-size: 2.2rem;
+    font-weight: 400;
+    position: absolute;
+    top: 3.5rem;
+    left: 2rem;
+    transform: rotate(-10deg);
+    letter-spacing: 0.04em;
+    z-index: 3;
+    user-select: text;
+    -webkit-user-select: text;
+    -moz-user-select: text;
+    -ms-user-select: text;
+    pointer-events: auto;
+    mix-blend-mode: normal;
+}
+
+.social-info {
+    font-family: 'Racing Sans One', cursive;
+    position: absolute;
+    bottom: 2rem;
+    left: 2rem;
+    font-size: 1.2rem;
+    color: white;
+    opacity: 0.9;
+    text-align: left;
+    display: flex;
+    flex-direction: column;
+    gap: 0.5rem;
+    font-weight: 400;
 } 
