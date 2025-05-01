@@ -177,32 +177,76 @@ document.addEventListener('DOMContentLoaded', () => {
     });
 
     // Simple download function using html2canvas
-    function downloadCard() {
+    async function downloadCard() {
         const previewCard = document.getElementById('preview-card');
         
-        // Wait for the Racing Sans One font to load
-        document.fonts.ready.then(() => {
-            html2canvas(previewCard, {
-                scale: 2,
-                useCORS: true,
-                allowTaint: true,
-                backgroundColor: null,
-                onclone: function(clonedDoc) {
-                    // Ensure font is applied to cloned elements
-                    const elements = clonedDoc.getElementsByClassName('preview-card')[0].getElementsByTagName('*');
-                    for(let el of elements) {
-                        if(['bubble-title', 'holder-name', 'holder-type', 'certified-text', 'social-info'].some(className => el.classList.contains(className))) {
-                            el.style.fontFamily = "'Racing Sans One', cursive";
+        // Ensure the Racing Sans One font is loaded
+        await document.fonts.load('1em "Racing Sans One"');
+        
+        // Create a promise to ensure font is ready
+        const fontPromise = new Promise((resolve) => {
+            if (document.fonts.check('1em "Racing Sans One"')) {
+                resolve();
+            } else {
+                document.fonts.ready.then(() => resolve());
+            }
+        });
+
+        // Wait for font to be ready
+        await fontPromise;
+
+        const scale = window.devicePixelRatio * 2; // Increase quality
+
+        const options = {
+            scale: scale,
+            useCORS: true,
+            allowTaint: true,
+            backgroundColor: null,
+            onclone: function(clonedDoc) {
+                const elements = clonedDoc.getElementsByClassName('preview-card')[0].getElementsByTagName('*');
+                for(let el of elements) {
+                    if(['bubble-title', 'holder-name', 'holder-type', 'certified-text', 'social-info'].some(className => el.classList.contains(className))) {
+                        el.style.fontFamily = 'Racing Sans One, cursive';
+                        // Preserve other important styles
+                        const originalEl = document.querySelector(`.${el.className.split(' ')[0]}`);
+                        if (originalEl) {
+                            const computedStyle = window.getComputedStyle(originalEl);
+                            // For certified text, preserve all stamp-related styles
+                            if (el.classList.contains('certified-text')) {
+                                el.style.color = computedStyle.color;
+                                el.style.fontSize = computedStyle.fontSize;
+                                el.style.textShadow = computedStyle.textShadow;
+                                el.style.letterSpacing = computedStyle.letterSpacing;
+                                el.style.transform = computedStyle.transform;
+                                el.style.border = computedStyle.border;
+                                el.style.borderRadius = computedStyle.borderRadius;
+                                el.style.background = computedStyle.background;
+                                el.style.boxShadow = computedStyle.boxShadow;
+                                el.style.backgroundImage = computedStyle.backgroundImage;
+                                el.style.padding = computedStyle.padding;
+                            } else {
+                                el.style.color = computedStyle.color;
+                                el.style.fontSize = computedStyle.fontSize;
+                                el.style.textShadow = computedStyle.textShadow;
+                                el.style.letterSpacing = computedStyle.letterSpacing;
+                            }
                         }
                     }
                 }
-            }).then(canvas => {
-                const link = document.createElement('a');
-                link.download = 'pnl-card.png';
-                link.href = canvas.toDataURL('image/png');
-                link.click();
-            });
-        });
+            }
+        };
+
+        try {
+            const canvas = await html2canvas(previewCard, options);
+            const link = document.createElement('a');
+            link.download = 'pnl-card.png';
+            link.href = canvas.toDataURL('image/png');
+            link.click();
+            showNotification('Card downloaded successfully!', 'success');
+        } catch (error) {
+            console.error('Error generating card:', error);
+            showNotification('Error generating card. Please try again.');
+        }
     }
 
     // Add click handler for download button
