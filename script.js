@@ -176,293 +176,33 @@ document.addEventListener('DOMContentLoaded', () => {
         });
     });
 
-    // Function to capture and download card
+    // Simple download function using html2canvas
     function downloadCard() {
-        try {
-            // Validate form
-            const errors = validateForm();
-            if (errors.length > 0) {
-                errors.forEach(error => showNotification(error));
-                return;
-            }
-
-            // Show loading notification
-            showNotification('Generating your card...', 'warning');
-            downloadBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> Processing...';
-
-            // Check if user is on mobile
-            const isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
-
-            // Get the selected background image
-            const selectedBg = document.querySelector('.background-option.selected img');
-            if (!selectedBg) {
-                showNotification('No background selected');
-                return;
-            }
-
-            // Create a canvas with exact dimensions
-            const canvas = document.createElement('canvas');
-            const ctx = canvas.getContext('2d');
-            canvas.width = 800;
-            canvas.height = 600;
-
-            // Function to draw rounded rectangle
-            function roundedRect(x, y, width, height, radius) {
-                ctx.beginPath();
-                ctx.moveTo(x + radius, y);
-                ctx.lineTo(x + width - radius, y);
-                ctx.quadraticCurveTo(x + width, y, x + width, y + radius);
-                ctx.lineTo(x + width, y + height - radius);
-                ctx.quadraticCurveTo(x + width, y + height, x + width - radius, y + height);
-                ctx.lineTo(x + radius, y + height);
-                ctx.quadraticCurveTo(x, y + height, x, y + height - radius);
-                ctx.lineTo(x, y + radius);
-                ctx.quadraticCurveTo(x, y, x + radius, y);
-                ctx.closePath();
-            }
-
-            // Create background image
-            const bgImg = new Image();
-            bgImg.crossOrigin = 'Anonymous';
-            
-            // Add timestamp to prevent caching
-            const timestamp = new Date().getTime();
-            bgImg.src = `${selectedBg.src}?t=${timestamp}`;
-
-            bgImg.onerror = () => {
-                console.error('Failed to load background image');
-                showNotification('Failed to load background image. Please try again or select a different background.');
-                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
-            };
-
-            bgImg.onload = () => {
-                try {
-                    // Clear canvas
-                    ctx.clearRect(0, 0, canvas.width, canvas.height);
-
-                    // Create clipping path for rounded corners
-                    roundedRect(0, 0, canvas.width, canvas.height, 16);
-                    ctx.clip();
-
-                    // Draw background
-                    ctx.drawImage(bgImg, 0, 0, canvas.width, canvas.height);
-
-                    // Add semi-transparent overlay
-                    ctx.fillStyle = 'rgba(0, 0, 0, 0.2)';
-                    ctx.fillRect(0, 0, canvas.width, canvas.height);
-
-                    // Draw white border (liner) around the card
-                    ctx.save();
-                    ctx.lineWidth = 4;
-                    ctx.strokeStyle = '#fff';
-                    roundedRect(2, 2, canvas.width - 4, canvas.height - 4, 16);
-                    ctx.stroke();
-                    ctx.restore();
-
-                    // Draw bubble title ($PNL CARD)
-                    ctx.save();
-                    ctx.font = 'bold 64px "Baloo 2", "Comic Sans MS", "Arial Rounded MT Bold", Arial, sans-serif';
-                    ctx.textAlign = 'right';
-                    
-                    // Add green glow effect
-                    ctx.shadowColor = 'rgba(74, 222, 128, 0.6)';
-                    ctx.shadowBlur = 20;
-                    ctx.shadowOffsetX = 0;
-                    ctx.shadowOffsetY = 2;
-                    
-                    // First layer of glow
-                    ctx.fillStyle = 'rgba(74, 222, 128, 0.4)';
-                    ctx.fillText('$PNL CARD', canvas.width - 48, 112);
-                    
-                    // Second layer of glow
-                    ctx.fillStyle = 'rgba(74, 222, 128, 0.6)';
-                    ctx.fillText('$PNL CARD', canvas.width - 49, 111);
-                    
-                    // Main text
-                    ctx.fillStyle = '#4ade80';
-                    ctx.fillText('$PNL CARD', canvas.width - 50, 110);
-                    
-                    ctx.restore();
-
-                    // Draw character image if exists and is loaded
-                    const charImg = document.getElementById('character-preview');
-                    if (charImg && charImg.style.display !== 'none' && charImg.complete && charImg.naturalHeight !== 0) {
-                        try {
-                            // Position character image on the left side
-                            const imgX = 50;
-                            const imgY = 150;
-                            const imgSize = 220;
-                            // Draw border
-                            ctx.strokeStyle = 'white';
-                            ctx.lineWidth = 3;
-                            ctx.strokeRect(imgX, imgY, imgSize, imgSize);
-                            // Draw image
-                            ctx.drawImage(charImg, imgX, imgY, imgSize, imgSize);
-                        } catch (imgError) {
-                            console.error('Error drawing character image:', imgError);
-                            showNotification('Warning: Could not add character image to card', 'warning');
+        const previewCard = document.getElementById('preview-card');
+        
+        // Wait for the Racing Sans One font to load
+        document.fonts.ready.then(() => {
+            html2canvas(previewCard, {
+                scale: 2,
+                useCORS: true,
+                allowTaint: true,
+                backgroundColor: null,
+                onclone: function(clonedDoc) {
+                    // Ensure font is applied to cloned elements
+                    const elements = clonedDoc.getElementsByClassName('preview-card')[0].getElementsByTagName('*');
+                    for(let el of elements) {
+                        if(['bubble-title', 'holder-name', 'holder-type', 'certified-text', 'social-info'].some(className => el.classList.contains(className))) {
+                            el.style.fontFamily = "'Racing Sans One', cursive";
                         }
                     }
-
-                    // Draw certified text
-                    ctx.save();
-                    ctx.translate(60, 60);
-                    ctx.rotate(-10 * Math.PI / 180);
-                    ctx.fillStyle = '#ff3b3b';
-                    ctx.font = 'bold 35px Inter, Arial, sans-serif';
-                    ctx.textAlign = 'left';
-                    ctx.textBaseline = 'middle';
-                    ctx.shadowColor = 'rgba(0,0,0,0.3)';
-                    ctx.shadowBlur = 4;
-                    ctx.fillText('CERTIFIED', 0, 0);
-                    ctx.restore();
-
-                    // Draw name and type (right side, vertically centered)
-                    const name = document.querySelector('.holder-name').textContent;
-                    const type = document.querySelector('.holder-type').textContent;
-                    // Positioning for right side, vertically centered
-                    const infoX = canvas.width - 80;
-                    const nameY = 300;
-                    const typeY = 370;
-
-                    // Name
-                    ctx.save();
-                    ctx.font = 'bold 56px Inter, Arial, sans-serif';
-                    ctx.textAlign = 'right';
-                    ctx.fillStyle = '#fff';
-                    ctx.shadowColor = 'rgba(0,0,0,0.25)';
-                    ctx.shadowBlur = 8;
-                    ctx.fillText(name, infoX, nameY);
-                    ctx.restore();
-
-                    // Type (title)
-                    ctx.save();
-                    ctx.font = 'bold 36px Inter, Arial, sans-serif';
-                    ctx.textAlign = 'right';
-                    
-                    // Add green glow effect
-                    ctx.shadowColor = 'rgba(74, 222, 128, 0.6)';
-                    ctx.shadowBlur = 20;
-                    ctx.shadowOffsetX = 0;
-                    ctx.shadowOffsetY = 2;
-                    
-                    // First layer of glow
-                    ctx.fillStyle = 'rgba(74, 222, 128, 0.4)';
-                    ctx.fillText(type, infoX + 2, typeY + 2);
-                    
-                    // Second layer of glow
-                    ctx.fillStyle = 'rgba(74, 222, 128, 0.6)';
-                    ctx.fillText(type, infoX + 1, typeY + 1);
-                    
-                    // Main text
-                    ctx.fillStyle = '#4ade80';
-                    ctx.fillText(type, infoX, typeY);
-                    
-                    ctx.restore();
-
-                    // Draw social info
-                    ctx.fillStyle = 'rgba(255, 255, 255, 0.9)';
-                    ctx.font = '20px Inter, Arial, sans-serif';
-                    ctx.textAlign = 'left';
-                    ctx.shadowColor = 'rgba(0,0,0,0.25)';
-                    ctx.shadowBlur = 4;
-                    ctx.fillText('X: @pnlcardsol', 50, canvas.height - 80);
-                    ctx.fillText('CA: Coming Soon', 50, canvas.height - 50);
-
-                    // Handle download differently for mobile vs desktop
-                    if (isMobile) {
-                        canvas.toBlob((blob) => {
-                            try {
-                                // Create a temporary link for downloading
-                                const url = URL.createObjectURL(blob);
-                                
-                                // For iOS devices
-                                if (/iPad|iPhone|iPod/.test(navigator.userAgent)) {
-                                    // Create temporary link
-                                    const link = document.createElement('a');
-                                    link.href = url;
-                                    link.download = `pnl-card-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
-                                    link.style.display = 'none';
-                                    document.body.appendChild(link);
-                                    link.click();
-                                    document.body.removeChild(link);
-                                    URL.revokeObjectURL(url);
-                                } 
-                                // For Android devices
-                                else {
-                                    // Use the Web Share API if available
-                                    if (navigator.share) {
-                                        const file = new File([blob], 'pnl-card.png', { type: 'image/png' });
-                                        navigator.share({
-                                            files: [file],
-                                            title: 'PNL Card',
-                                            text: 'Check out my PNL Card!'
-                                        }).then(() => {
-                                            showNotification('Card saved successfully!', 'success');
-                                        }).catch(error => {
-                                            console.error('Error sharing:', error);
-                                            // Fallback to direct download if sharing fails
-                                            const link = document.createElement('a');
-                                            link.href = url;
-                                            link.download = `pnl-card-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
-                                            link.click();
-                                            URL.revokeObjectURL(url);
-                                        });
-                                    } else {
-                                        // Fallback for older Android devices
-                                        const link = document.createElement('a');
-                                        link.href = url;
-                                        link.download = `pnl-card-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
-                                        link.click();
-                                        URL.revokeObjectURL(url);
-                                    }
-                                }
-                                
-                                // Reset button and show success
-                                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
-                                showNotification('Card saved to your photos!', 'success');
-                                
-                                // Open X profile in a new tab after a short delay
-                                setTimeout(() => {
-                                    window.open('https://x.com/PNLCARDSOL', '_blank');
-                                }, 500);
-                            } catch (error) {
-                                console.error('Error saving image:', error);
-                                showNotification('Error saving image. Please try again.');
-                                downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
-                            }
-                        }, 'image/png');
-                    } else {
-                        // Desktop download logic
-                        canvas.toBlob((blob) => {
-                            const url = URL.createObjectURL(blob);
-                            const link = document.createElement('a');
-                            link.download = `pnl-card-${new Date().toISOString().replace(/[:.]/g, '-')}.png`;
-                            link.href = url;
-                            link.click();
-                            URL.revokeObjectURL(url);
-                            // Reset button and show success
-                            downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
-                            showNotification('Card downloaded successfully!', 'success');
-                            // Open X profile in a new tab after a short delay
-                            setTimeout(() => {
-                                window.open('https://x.com/PNLCARDSOL', '_blank');
-                            }, 500);
-                        }, 'image/png');
-                    }
-
-                } catch (error) {
-                    console.error('Error generating card:', error);
-                    showNotification('Error generating card. Please try again.');
-                    downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
                 }
-            };
-
-        } catch (error) {
-            console.error('Download error:', error);
-            showNotification('Failed to generate card');
-            downloadBtn.innerHTML = '<i class="fas fa-download"></i> Download';
-        }
+            }).then(canvas => {
+                const link = document.createElement('a');
+                link.download = 'pnl-card.png';
+                link.href = canvas.toDataURL('image/png');
+                link.click();
+            });
+        });
     }
 
     // Add click handler for download button
