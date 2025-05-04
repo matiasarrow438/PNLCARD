@@ -99,7 +99,10 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                         self.end_headers()
                         self.wfile.write(json.dumps({'error': str(e)}).encode())
                 else:
-                    raise Exception("No file uploaded")
+                    self.send_response(400)
+                    self.send_header('Content-type', 'application/json')
+                    self.end_headers()
+                    self.wfile.write(json.dumps({'error': 'No file uploaded'}).encode())
             except Exception as e:
                 import traceback; traceback.print_exc()
                 self.send_response(500)
@@ -108,7 +111,9 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                 self.wfile.write(json.dumps({'error': str(e)}).encode())
         else:
             self.send_response(404)
+            self.send_header('Content-type', 'application/json')
             self.end_headers()
+            self.wfile.write(json.dumps({'error': 'Not found'}).encode())
 
 def run_server():
     # Change to the directory where the script is located
