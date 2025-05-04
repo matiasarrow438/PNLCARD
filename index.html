@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>A degen deserves a personalised Pnl card.</title>
+    <title>Personalised Pnl card.</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="assets/dodge.png">
     <!-- Load Racing Sans One font -->
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -14,16 +16,47 @@
 </head>
 <body>
     <div class="top-right-icons">
-        <a href="https://discord.gg/G7jBjD33QW" target="_blank" class="icon-link" title="Join us on Discord">
-            <i class="fab fa-discord"></i>
-        </a>
-        <a href="https://t.me/PNLcards" target="_blank" class="icon-link" title="Join us on Telegram">
-            <i class="fab fa-telegram"></i>
-        </a>
-        <a href="https://x.com/PNLCARDSOL" target="_blank" class="icon-link" title="Follow us on X">
-            <i class="fab fa-twitter"></i>
-        </a>
+        <div class="icon-row">
+            <a href="https://discord.gg/G7jBjD33QW" target="_blank" class="icon-link" title="Join us on Discord">
+                <i class="fab fa-discord"></i>
+            </a>
+            <a href="https://t.me/pnlcardsol" target="_blank" class="icon-link" title="Join us on Telegram">
+                <i class="fab fa-telegram"></i>
+            </a>
+            <a href="https://x.com/PNLCARDSOL" target="_blank" class="icon-link" title="Follow us on X">
+                <i class="fab fa-twitter"></i>
+            </a>
+        </div>
+        <button id="submitBackgroundBtn" class="submit-background-btn">
+            <i class="fas fa-image"></i> SUBMIT your background!
+        </button>
     </div>
+
+    <!-- Background Submission Modal -->
+    <div id="backgroundSubmissionModal" class="background-submission-modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Submit Your Background</h2>
+            <p class="modal-description">Share your custom background with the community! Make sure it follows these requirements:</p>
+            <ul class="requirements-list">
+                <li><i class="fas fa-check"></i> Image size: 800x600 pixels</li>
+                <li><i class="fas fa-check"></i> File format: PNG, JPG, or JPEG</li>
+                <li><i class="fas fa-check"></i> Maximum file size: 5MB</li>
+            </ul>
+            <form id="backgroundForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="twitterHandle">Your Twitter Handle (optional)</label>
+                    <input type="text" id="twitterHandle" name="twitterHandle" placeholder="@yourhandle" maxlength="32">
+                </div>
+                <div class="form-group">
+                    <label for="background">Choose Background Image</label>
+                    <input type="file" id="background" name="background" accept="image/*" required>
+                </div>
+                <button type="submit" class="submit-btn">Submit Background</button>
+            </form>
+            <div id="submissionStatus"></div>
+        </div>
+    </div>
+
     <div class="container">
         <header>
             <h1>A degen deserves a personalised Pnl card.</h1>
@@ -138,10 +171,10 @@
                                 <img src="assets/backgrounds/bg12.png" alt="Background 12" crossorigin="anonymous" loading="eager">
                             </div>
                             <div class="background-option" data-bg="bg13">
-                                <img src="assets/backgrounds/bg13.png" alt="Background 13" crossorigin="anonymous" loading="eager">
+                                <img src="assets/backgrounds/bg13.jpg" alt="Background 13" crossorigin="anonymous" loading="eager">
                             </div>
                             <div class="background-option" data-bg="bg14">
-                                <img src="assets/backgrounds/bg14.png" alt="Background 14" crossorigin="anonymous" loading="eager">
+                                <img src="assets/backgrounds/bg14.jpg" alt="Background 14" crossorigin="anonymous" loading="eager">
                             </div>
                             <div class="background-option" data-bg="bg15">
                                 <img src="assets/backgrounds/bg15.png" alt="Background 15" crossorigin="anonymous" loading="eager">
