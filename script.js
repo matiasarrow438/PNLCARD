@@ -179,23 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
     // Simple download function using html2canvas
     async function downloadCard() {
         const previewCard = document.getElementById('preview-card');
-        
-        // Ensure the Racing Sans One font is loaded
-        await document.fonts.load('1em "Racing Sans One"');
-        
-        // Create a promise to ensure font is ready
-        const fontPromise = new Promise((resolve) => {
-            if (document.fonts.check('1em "Racing Sans One"')) {
-                resolve();
-            } else {
-                document.fonts.ready.then(() => resolve());
-            }
-        });
-
-        // Wait for font to be ready
-        await fontPromise;
-
-        const scale = window.devicePixelRatio * 2; // Increase quality
+        const scale = window.devicePixelRatio || 1;
 
         const options = {
             scale: scale,
@@ -224,12 +208,11 @@ document.addEventListener('DOMContentLoaded', () => {
                                 el.style.boxShadow = computedStyle.boxShadow;
                                 el.style.backgroundImage = computedStyle.backgroundImage;
                                 el.style.padding = computedStyle.padding;
-                            } else {
-                                el.style.color = computedStyle.color;
-                                el.style.fontSize = computedStyle.fontSize;
-                                el.style.textShadow = computedStyle.textShadow;
-                                el.style.letterSpacing = computedStyle.letterSpacing;
                             }
+                            el.style.color = computedStyle.color;
+                            el.style.fontSize = computedStyle.fontSize;
+                            el.style.textShadow = computedStyle.textShadow;
+                            el.style.letterSpacing = computedStyle.letterSpacing;
                         }
                     }
                 }
@@ -241,8 +224,23 @@ document.addEventListener('DOMContentLoaded', () => {
             const link = document.createElement('a');
             link.download = 'pnl-card.png';
             link.href = canvas.toDataURL('image/png');
+            
+            // Create a promise that resolves when the download is complete
+            const downloadPromise = new Promise((resolve) => {
+                link.onclick = () => {
+                    setTimeout(resolve, 1000); // Wait for download to start
+                };
+            });
+            
             link.click();
+            await downloadPromise;
+            
             showNotification('Card downloaded successfully!', 'success');
+            
+            // Open Twitter in a new tab after download
+            setTimeout(() => {
+                window.open('https://twitter.com/PNLCARDSOL', '_blank');
+            }, 500);
         } catch (error) {
             console.error('Error generating card:', error);
             showNotification('Error generating card. Please try again.');
@@ -269,14 +267,6 @@ document.addEventListener('DOMContentLoaded', () => {
             navigator.clipboard.writeText('COMING SOON').then(() => {
                 showNotification('CA copied to clipboard!', 'success');
             });
-        });
-    }
-
-    // Close (X) button functionality
-    const closeBtn = document.getElementById('close-btn');
-    if (closeBtn) {
-        closeBtn.addEventListener('click', () => {
-            window.location.href = 'https://example.com'; // Replace with your redirect URL
         });
     }
 
@@ -335,4 +325,75 @@ document.addEventListener('DOMContentLoaded', () => {
 
     // Initial update
     updateCard();
+
+    // Background submission modal handling
+    const submitBackgroundBtn = document.getElementById('submitBackgroundBtn');
+    const backgroundModal = document.getElementById('backgroundSubmissionModal');
+    const closeModalBtn = document.querySelector('.close-modal-btn');
+    const backgroundForm = document.getElementById('backgroundForm');
+    const submissionStatus = document.getElementById('submissionStatus');
+
+    // Prevent modal from closing when clicking inside the modal content
+    const modalContent = document.querySelector('.modal-content');
+    if (modalContent) {
+        modalContent.addEventListener('click', (e) => {
+            e.stopPropagation();
+        });
+    }
+
+    // Show modal
+    submitBackgroundBtn.addEventListener('click', () => {
+        backgroundModal.classList.add('show');
+        backgroundModal.style.display = 'flex';
+    });
+
+    // Close modal when clicking outside
+    window.addEventListener('click', (e) => {
+        if (e.target === backgroundModal) {
+            backgroundModal.classList.remove('show');
+            backgroundModal.style.display = 'none';
+        }
+    });
+
+    // Handle form submission
+    backgroundForm.addEventListener('submit', async (e) => {
+        e.preventDefault();
+        
+        const fileInput = document.getElementById('background');
+        const file = fileInput.files[0];
+        if (!file) {
+            showNotification('Please select a file', 'error');
+            return;
+        }
+        if (file.size > 5 * 1024 * 1024) {
+            showNotification('File size must be less than 5MB', 'error');
+            return;
+        }
+        const formData = new FormData(backgroundForm);
+        
+        try {
+            submissionStatus.textContent = 'Submitting...';
+            submissionStatus.style.color = '#4ade80';
+            
+            const response = await fetch('/submit_background', {
+                method: 'POST',
+                body: formData
+            });
+            
+            const result = await response.json();
+            
+            if (result.success) {
+                showNotification('Background submitted successfully!', 'success');
+                backgroundForm.reset();
+                backgroundModal.classList.remove('show');
+                backgroundModal.style.display = 'none';
+            } else {
+                throw new Error(result.error || 'Submission failed');
+            }
+        } catch (error) {
+            showNotification(error.message, 'error');
+        } finally {
+            submissionStatus.textContent = '';
+        }
+    });
 }); 
