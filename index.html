@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Personalised Pnl card.</title>
+    <!-- Favicon -->
+    <link rel="icon" type="image/png" href="images/dodge.png">
+    <link rel="shortcut icon" type="image/png" href="images/dodge.png">
+    <link rel="apple-touch-icon" type="image/png" href="images/dodge.png">
+    <!-- Load Racing Sans One font -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Racing+Sans+One&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+</head>
+<body>
+    <div class="top-right-icons">
+        <div class="icon-row">
+            <a href="https://discord.gg/G7jBjD33QW" target="_blank" class="icon-link" title="Join us on Discord">
+                <i class="fab fa-discord"></i>
+            </a>
+            <a href="https://t.me/pnlcardsol" target="_blank" class="icon-link" title="Join us on Telegram">
+                <i class="fab fa-telegram"></i>
+            </a>
+            <a href="https://x.com/PNLCARDSOL" target="_blank" class="icon-link" title="Follow us on X">
+                <i class="fab fa-twitter"></i>
+            </a>
+        </div>
+        <button id="submitBackgroundBtn" class="submit-background-btn">
+            <i class="fas fa-image"></i> SUBMIT your background!
+        </button>
+    </div>
+
+    <!-- Background Submission Modal -->
+    <div id="backgroundSubmissionModal" class="background-submission-modal" style="display:none;">
+        <div class="modal-content">
+            <h2>Submit Your Background</h2>
+            <p class="modal-description">Share your custom background with the community! Make sure it follows these requirements:</p>
+            <ul class="requirements-list">
+                <li><i class="fas fa-check"></i> Image size: 800x600 pixels</li>
+                <li><i class="fas fa-check"></i> File format: PNG, JPG, or JPEG</li>
+                <li><i class="fas fa-check"></i> Maximum file size: 5MB</li>
+            </ul>
+            <form id="backgroundForm" enctype="multipart/form-data">
+                <div class="form-group">
+                    <label for="twitterHandle">Your Twitter Handle (optional)</label>
+                    <input type="text" id="twitterHandle" name="twitterHandle" placeholder="@yourhandle" maxlength="32">
+                </div>
+                <div class="form-group">
+                    <label for="background">Choose Background Image</label>
+                    <input type="file" id="background" name="background" accept="image/*" required>
+                </div>
+                <button type="submit" class="submit-btn">Submit Background</button>
+            </form>
+            <div id="submissionStatus"></div>
+        </div>
+    </div>
+
+    <div class="container">
+        <header>
+            <h1>A degen deserves a personalised Pnl card.</h1>
+            <p class="subtitle">Get certified as a true trader with an official PNL license</p>
+        </header>
+
+        <main>
+            <div class="form-section">
+                <div class="license-form">
+                    <div class="form-group">
+                        <label for="name">Your Name</label>
+                        <input type="text" id="name" placeholder="Enter your name">
+                    </div>
+                    
+                    <div class="form-group" id="title-group" style="position: relative; width: max-content;">
+                        <select id="type">
+                            <option value="11000x-degen-king">11000x Degen King</option>
+                            <option value="1000x-chad">1000x Chad</option>
+                            <option value="god-candle-finder">God Candle Finder</option>
+                            <option value="kol-killer">KOL Killer</option>
+                            <option value="custom">Custom Title</option>
+                        </select>
+                        <button id="editCustomTitle" class="edit-btn" style="display: none;" title="Edit Custom Title">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+
+                    <!-- Custom Title Popup -->
+                    <div id="customTitlePopup" class="popup-modal" style="display: none;">
+                        <div class="popup-content">
+                            <h3>Enter Your Custom Title</h3>
+                            <input type="text" id="customTitleInput" placeholder="Type your custom title here" maxlength="20">
+                            <div class="popup-buttons">
+                                <button id="saveCustomTitle" class="action-btn">Save</button>
+                                <button id="cancelCustomTitle" class="action-btn cancel-btn">Cancel</button>
+                            </div>
+                        </div>
+                        
+                    </div>
+                    
+
+                    <div class="form-group">
+                        <label>Select Character</label>
+                        <div class="character-options">
+                            <div class="character-option" data-character="char1">
+                                <img src="assets/characters/character1.png" alt="Character 1" crossorigin="anonymous">
+                            </div>
+                            <div class="character-option" data-character="char2">
+                                <img src="assets/characters/character2.png" alt="Character 2" crossorigin="anonymous">
+                            </div>
+                            <div class="character-option" data-character="char3">
+                                <img src="assets/characters/character3.png" alt="Character 3" crossorigin="anonymous">
+                            </div>
+                            <div class="character-option" data-character="char4">
+                                <img src="assets/characters/character4.png" alt="Character 4" crossorigin="anonymous">
+                            </div>
+                            <div class="character-option" data-character="char5">
+                                <img src="assets/characters/character5.png" alt="Character 5" crossorigin="anonymous">
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="character-image">Or Upload Your Own Character (PNG, JPG, GIF supported)</label>
+                        <div class="image-upload-container">
+                            <input type="file" id="character-image" accept="image/*" class="image-upload">
+                            <div class="image-preview" id="image-preview">
+                                <i class="fas fa-user"></i>
+                                <span>Click to upload</span>
+                            </div>
+                        </div>
+                        <div class="upload-note">Supported formats: PNG, JPG, GIF, WEBP, etc.</div>
+                    </div>
+
+                    <div class="form-group">
+                        <label>Select Background</label>
+                        <div class="background-options">
+                            <div class="background-option selected" data-bg="bg1">
+                                <img src="assets/backgrounds/bg1.png" alt="Background 1" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg2">
+                                <img src="assets/backgrounds/bg2.png" alt="Background 2" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg3">
+                                <img src="assets/backgrounds/bg3.png" alt="Background 3" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg4">
+                                <img src="assets/backgrounds/bg4.png" alt="Background 4" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg5">
+                                <img src="assets/backgrounds/bg5.png" alt="Background 5" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg6">
+                                <img src="assets/backgrounds/bg6.png" alt="Background 6" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg7">
+                                <img src="assets/backgrounds/bg7.png" alt="Background 7" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg8">
+                                <img src="assets/backgrounds/bg8.png" alt="Background 8" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg9">
+                                <img src="assets/backgrounds/bg9.png" alt="Background 9" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg10">
+                                <img src="assets/backgrounds/bg10.png" alt="Background 10" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg11">
+                                <img src="assets/backgrounds/bg11.png" alt="Background 11" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg12">
+                                <img src="assets/backgrounds/bg12.png" alt="Background 12" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg13">
+                                <img src="assets/backgrounds/bg13.jpg" alt="Background 13" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg14">
+                                <img src="assets/backgrounds/bg14.png" alt="Background 14" crossorigin="anonymous" loading="eager">
+                            </div>
+                            <div class="background-option" data-bg="bg15">
+                                <img src="assets/backgrounds/bg15.png" alt="Background 15" crossorigin="anonymous" loading="eager">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="preview-section">
+                    <div class="preview-container">
+                        <div class="preview-card" id="preview-card">
+                            <div class="banner-liner"></div>
+                            <div class="card-background" id="preview-background"></div>
+                            <div class="card-content">
+                                <div class="card-header">
+                                    <h2 class="bubble-title">$PNL CARD</h2>
+                                </div>
+                                <div class="card-body">
+                                    <div class="character-image-container">
+                                        <img id="character-preview" src="#" alt="Character Preview" style="display: none;">
+                                    </div>
+                                    <div class="certified-text">CERTIFIED</div>
+                                    <div class="holder-info">
+                                        <div class="holder-name">Enter your name</div>
+                                        <div class="holder-type-container">
+                                            <div class="holder-type">11000X Degen King</div>
+                                            <button id="editCustomTitle" class="edit-btn" style="display: none;">
+                                                <i class="fas fa-edit"></i>
+                                            </button>
+                                        </div>
+                                    </div>
+                                </div>
+                                <div class="social-info">
+                                    <div>X: @pnlcardsol</div>
+                                    <div>CA: Coming Soon</div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="action-buttons">
+                        <button id="preview-download-btn" class="action-btn download-btn">
+                            <i class="fas fa-download"></i> Download
+                        </button>
+                        <button id="preview-share-btn" class="action-btn share-btn">
+                            <i class="fas fa-share-alt"></i> Share
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+    <script src="script.js"></script>
+    <div id="notification-container"></div>
+</body>
+</html> 
