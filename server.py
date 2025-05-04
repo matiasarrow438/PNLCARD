@@ -22,13 +22,24 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
         super().end_headers()
 
     def do_OPTIONS(self):
-        # Handle preflight requests
         self.send_response(200)
+        self.send_header('Access-Control-Allow-Origin', 'https://pnlcardsol.org')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        self.send_header('Access-Control-Max-Age', '86400')
         self.end_headers()
 
     def do_POST(self):
         if self.path == '/submit_background':
             try:
+                # Set CORS headers for the actual request
+                self.send_response(200)
+                self.send_header('Access-Control-Allow-Origin', 'https://pnlcardsol.org')
+                self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+                self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+                self.send_header('Content-type', 'application/json')
+                self.end_headers()
+
                 content_length = int(self.headers['Content-Length'])
                 content_type = self.headers['Content-Type']
                 post_data = self.rfile.read(content_length)
@@ -100,26 +111,14 @@ class CustomHandler(http.server.SimpleHTTPRequestHandler):
                         print("File uploaded to Discord, now deleting:", file_path)
                         os.remove(file_path)
                         print("File deleted successfully.")
-                        self.send_response(200)
-                        self.send_header('Content-type', 'application/json')
-                        self.end_headers()
                         self.wfile.write(json.dumps({'success': True}).encode())
                     except Exception as e:
                         import traceback; traceback.print_exc()
-                        self.send_response(500)
-                        self.send_header('Content-type', 'application/json')
-                        self.end_headers()
                         self.wfile.write(json.dumps({'error': str(e)}).encode())
                 else:
-                    self.send_response(400)
-                    self.send_header('Content-type', 'application/json')
-                    self.end_headers()
                     self.wfile.write(json.dumps({'error': 'No file uploaded'}).encode())
             except Exception as e:
                 import traceback; traceback.print_exc()
-                self.send_response(500)
-                self.send_header('Content-type', 'application/json')
-                self.end_headers()
                 self.wfile.write(json.dumps({'error': str(e)}).encode())
         else:
             self.send_response(404)
