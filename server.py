@@ -14,6 +14,18 @@ PORT = 8000
 DISCORD_WEBHOOK_URL = "https://discord.com/api/webhooks/1368426386007785602/uBd25UapD-3E-C2-dAXe5FGTXCUCeLoSv42KFBHM4FqYb56uyFZBimJ_mvI3odc9rjzR"
 
 class CustomHandler(http.server.SimpleHTTPRequestHandler):
+    def end_headers(self):
+        # Add CORS headers
+        self.send_header('Access-Control-Allow-Origin', 'https://pnlcardsol.org')
+        self.send_header('Access-Control-Allow-Methods', 'GET, POST, OPTIONS')
+        self.send_header('Access-Control-Allow-Headers', 'Content-Type')
+        super().end_headers()
+
+    def do_OPTIONS(self):
+        # Handle preflight requests
+        self.send_response(200)
+        self.end_headers()
+
     def do_POST(self):
         if self.path == '/submit_background':
             try:
