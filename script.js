@@ -375,7 +375,7 @@ document.addEventListener('DOMContentLoaded', () => {
             submissionStatus.textContent = 'Submitting...';
             submissionStatus.style.color = '#4ade80';
             
-            const response = await fetch('/submit_background', {
+            const response = await fetch('http://localhost:8000/submit_background', {
                 method: 'POST',
                 body: formData
             });
